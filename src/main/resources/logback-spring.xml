@@ -1,0 +1,95 @@
+<configuration>
+
+    <!-- Console Appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application Logs -->
+    <appender name="APP_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/application.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Aspect Logs -->
+    <appender name="LOGGING_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/logging.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="PERFORMANCE_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/performance.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="VALIDATION_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/validation.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Aspect Loggers -->
+    
+    <logger name="com.asmit.JobApp.AOP.ApplicationAspect" level="info" additivity="false">
+        <appender-ref ref="APP_LOG_FILE"/>
+    </logger>
+
+    <logger name="com.asmit.JobApp.AOP.LoggingAspect" level="info" additivity="false">
+        <appender-ref ref="LOGGING_FILE"/>
+    </logger>
+
+    <logger name="com.asmit.JobApp.AOP.PerformanceAspect" level="info" additivity="false">
+        <appender-ref ref="PERFORMANCE_FILE"/>
+    </logger>
+
+    <logger name="com.asmit.JobApp.AOP.ValidationAspect" level="info" additivity="false">
+        <appender-ref ref="VALIDATION_FILE"/>
+    </logger>
+
+    <!-- Suppress Unnecessary Warnings -->
+    <logger name="org.hibernate.orm.deprecation" level="ERROR"/>
+    <logger name="org.springframework.boot.devtools" level="ERROR"/>
+    <logger name="org.apache.jasper.servlet.TldScanner" level="ERROR"/>
+
+    <!-- Optimize Logging -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.hibernate.SQL" level="ERROR"/>
+    <logger name="org.hibernate.type.descriptor.sql" level="ERROR"/>
+
+    <!-- Application Logger -->
+    <logger name="com.asmit.JobApp" level="INFO" additivity="false">
+        <appender-ref ref="APP_LOG_FILE"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="APP_LOG_FILE"/>
+    </root>
+
+</configuration>
+
+<!--
+    Log levels in order of priority (low to high):
+    TRACE
+    DEBUG
+    INFO
+    WARN
+    ERROR
+    FATAL (not used in Logback)
+-->
