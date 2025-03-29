@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.asmit.JobApp.model.JobPost;
+import com.asmit.JobApp.service.JobPostDTO;
 import com.asmit.JobApp.service.JobService;
 
 @RestController
@@ -55,16 +56,15 @@ public class JobController
 		return "Job Post deleted successfully!";
 	}
 
-	@GetMapping("/load")
-	public String loadData()
-	{
-		service.loadJobData();
-		return "Data loaded successfully!";
-	}
-
 	@GetMapping("/jobPost/keyword/{keyword}")
 	public List<JobPost> getJobByKeyword(@PathVariable String keyword)
 	{
 		return service.getJobByKeyword(keyword);
 	}
+
+	@GetMapping("/recommend/{userId}")
+    public List<JobPostDTO> getRecommendedJobs(@PathVariable int userId)
+	{
+        return service.recommendJobs(userId);
+    }
 }

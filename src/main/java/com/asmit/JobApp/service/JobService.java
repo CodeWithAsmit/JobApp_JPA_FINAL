@@ -1,18 +1,24 @@
 package com.asmit.JobApp.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.asmit.JobApp.model.JobPost;
-import com.asmit.JobApp.repo.JobRepo;
+import com.asmit.JobApp.repo.JobPostRepository;
+import com.asmit.JobApp.repo.UserProfileRepository;
 
 @Service
 public class JobService
 {
     @Autowired
-    public JobRepo repo;
+    public JobPostRepository repo;
+
+    @Autowired
+    UserProfileRepository userProfileRepository;
 
     public void addJobPost(JobPost jobPost)
     {
@@ -39,20 +45,40 @@ public class JobService
         repo.deleteById(id);
     }
 
-    public void loadJobData()
-    {
-        List<JobPost> jobPosts = List.of(
-                new JobPost(1, "Java Developer", "Java Developer with 2-3 years of experience", 2, List.of("Java", "Spring Boot", "Hibernate")),
-                new JobPost(2, "React Developer", "React Developer with 2-3 years of experience", 2, List.of("React", "Redux", "JavaScript")),
-                new JobPost(3, "Angular Developer", "Angular Developer with 2-3 years of experience", 2, List.of("Angular", "TypeScript", "RxJS")),
-                new JobPost(4, "Python Developer", "Python Developer with 2-3 years of experience", 2, List.of("Python", "Django", "Flask")),
-                new JobPost(5, "Node.js Developer", "Node.js Developer with 2-3 years of experience", 2, List.of("Node.js", "Express.js", "MongoDB"))
-        );
-        repo.saveAll(jobPosts);
-    }
-
     public List<JobPost> getJobByKeyword(String keyword)
     {
-        return repo.findByPostProfileContainingOrPostDescContaining(keyword,keyword);
+        return repo.findByKeyword(keyword);
+    }
+
+    public List<JobPostDTO> recommendJobs(int userId)
+    {
+        List<String> skills = userProfileRepository.findSkillsByUserId(userId);
+
+        if (!skills.isEmpty())
+        {
+            List<JobPost> jobPosts = repo.findBySkillsIn(skills);
+
+            return jobPosts.stream()
+                    .map(jobPost -> {
+                        double similarityScore = calculateSimilarityScore(skills, jobPost.getPostTechStack());
+                        return new JobPostDTO(jobPost, similarityScore);
+                    })
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    private double calculateSimilarityScore(List<String> userSkills, List<String> jobSkills)
+    {
+        Set<String> uniqueJobSkills = jobSkills.stream().collect(Collectors.toSet());
+        long matchedSkills = userSkills.stream()
+                .filter(uniqueJobSkills::contains)
+                .count();
+
+        if (uniqueJobSkills.size() == 0)
+        {
+            return 0.0;
+        }
+        return (double) matchedSkills / uniqueJobSkills.size();
     }
 }

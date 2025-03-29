@@ -1,6 +1,5 @@
 package com.asmit.JobApp.controller;
 
-import com.asmit.JobApp.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.asmit.JobApp.model.User;
+import com.asmit.JobApp.model.UserProfile;
 import com.asmit.JobApp.service.UserService;
+import com.asmit.JobApp.service.JwtService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -74,4 +75,10 @@ public class UserController
 				.header(HttpHeaders.SET_COOKIE, expiredCookie.toString())
 				.body("Logged out successfully");
 	}
+
+	@PostMapping("addUserProfile")
+    public UserProfile addUserProfile(@RequestBody UserProfile userProfile)
+	{
+        return service.addUserProfile(userProfile);
+    }
 }
