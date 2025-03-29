@@ -6,15 +6,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.asmit.JobApp.repo.UserProfileRepository;
 import com.asmit.JobApp.repo.UserRepo;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import com.asmit.JobApp.model.User;
 import com.asmit.JobApp.model.UserPrincipal;
+import com.asmit.JobApp.model.UserProfile;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService
 {
     @Autowired
 	private UserRepo repo;
+
+    @Autowired
+    private UserProfileRepository userRepo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -30,4 +38,9 @@ public class MyUserDetailsService implements UserDetailsService
             return new UserPrincipal(user);
         }
 	}
+
+    public UserProfile getUserById(int id)
+    {
+        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+    }
 }
