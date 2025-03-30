@@ -8,12 +8,12 @@ import io.github.cdimascio.dotenv.Dotenv;
 @SpringBootApplication
 @EnableAspectJAutoProxy
 
-public class JobApplication
+public class JobApplicationMain
 {
 	public static void main(String[] args)
 	{
 		Dotenv dotenv = Dotenv.load();
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-		SpringApplication.run(JobApplication.class, args);
+		SpringApplication.run(JobApplicationMain.class, args);
 	}
 }

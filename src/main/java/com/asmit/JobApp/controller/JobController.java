@@ -1,13 +1,18 @@
 package com.asmit.JobApp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.asmit.JobApp.model.JobApplication;
 import com.asmit.JobApp.model.JobPost;
+import com.asmit.JobApp.model.Referral;
+import com.asmit.JobApp.repo.JobPostRepository;
 import com.asmit.JobApp.service.JobPostDTO;
 import com.asmit.JobApp.service.JobService;
+import com.asmit.JobApp.service.ReferralService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -16,6 +21,9 @@ public class JobController
 {
 	@Autowired
 	private JobService service;
+
+	@Autowired
+    public JobPostRepository repo;
 
 	@GetMapping(path="/jobPosts")
 	public List<JobPost> getAllJobs()
@@ -67,4 +75,24 @@ public class JobController
 	{
         return service.recommendJobs(userId);
     }
+
+	@PostMapping("/apply/{jobId}")
+    public String applyForJob(@PathVariable int jobId, @RequestParam(name = "ref", required = false) Integer referralId, @RequestParam(name = "userId") int userId)
+	{
+        boolean isApplied = service.applyForJob(jobId, userId, referralId);
+		if (!isApplied)
+		{
+			return "Job application failed! Invalid job ID or referral.";
+		}
+		else
+		{
+			return "Job application successful!";
+		}
+    }
+
+	@GetMapping("/applications/{jobId}")
+	public List<JobApplication> getApplicationsForJob(@PathVariable int jobId)
+	{
+		return service.getApplicationsForJob(jobId);
+	}
 }

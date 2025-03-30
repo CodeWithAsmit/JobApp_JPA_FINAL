@@ -25,4 +25,10 @@ public class UserProfile
     private List<String> skills;
 
     private int experience;
+    private int referralPoints;
+     
+    public void addReferralPoints(int points)
+    {
+        this.referralPoints += points;
+    }
 }
