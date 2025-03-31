@@ -21,4 +21,8 @@ public interface JobPostRepository extends JpaRepository<JobPost, Integer>
     "JOIN job_tech_stack jts ON jp.post_id = jts.post_id " +
     "WHERE jts.tech_stack IN (:skills)", nativeQuery = true)
     List<JobPost> findBySkillsIn(@Param("skills") List<String> skills);
+
+    @Query("SELECT j FROM JobPost j WHERE " +
+    "(j.location = :location OR j.remote = :remote)")
+    List<JobPost> findByLocationOrRemote(@Param("location") String location, @Param("remote") boolean remote);
 }

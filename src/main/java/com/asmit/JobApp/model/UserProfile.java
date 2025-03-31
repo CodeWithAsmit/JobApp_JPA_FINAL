@@ -31,4 +31,7 @@ public class UserProfile
     {
         this.referralPoints += points;
     }
+
+    private String preferredLocation;
+    private boolean prefersRemote; 
 }

@@ -43,6 +43,7 @@ public class SecurityConfig
 		http.csrf(customizer -> customizer.disable())
 			.authorizeHttpRequests(request -> request
 				.requestMatchers("register", "login", "logout").permitAll()
+				.requestMatchers("/job-alerts/**").permitAll()
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

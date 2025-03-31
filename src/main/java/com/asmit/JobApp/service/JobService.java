@@ -34,9 +34,9 @@ public class JobService
     @Autowired
     private ReferralService referralService;
 
-    public void addJobPost(JobPost jobPost)
+    public JobPost addJobPost(JobPost jobPost)
     {
-        repo.save(jobPost);
+        return repo.save(jobPost);
     }
 
     public List<JobPost> returnAllJobPosts()

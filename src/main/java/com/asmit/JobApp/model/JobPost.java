@@ -41,4 +41,7 @@ public class JobPost
 
 	@Transient
     private double similarityScore;
+
+	private String location;  
+    private boolean remote;
 }

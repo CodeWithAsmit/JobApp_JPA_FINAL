@@ -14,4 +14,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Intege
 {
     @Query(value = "SELECT skill FROM user_skills WHERE id = :userId", nativeQuery = true)
     List<String> findSkillsByUserId(@Param("userId") int userId);
+
+    @Query("SELECT u FROM UserProfile u WHERE u.preferredLocation = :location OR u.prefersRemote = :remote")
+    List<UserProfile> findByPreferredLocationOrPrefersRemote(@Param("location") String location, @Param("remote") boolean remote);
 }

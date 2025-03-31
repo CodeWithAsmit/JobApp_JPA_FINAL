@@ -13,9 +13,10 @@ import com.asmit.JobApp.repo.JobPostRepository;
 import com.asmit.JobApp.service.JobPostDTO;
 import com.asmit.JobApp.service.JobService;
 import com.asmit.JobApp.service.ReferralService;
+import com.asmit.JobApp.service.WebSocketNotificationService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 
 public class JobController
 {
@@ -24,6 +25,9 @@ public class JobController
 
 	@Autowired
     public JobPostRepository repo;
+
+	@Autowired
+    private WebSocketNotificationService webSocketNotificationService;
 
 	@GetMapping(path="/jobPosts")
 	public List<JobPost> getAllJobs()
@@ -38,10 +42,11 @@ public class JobController
 	}
 
 	@PostMapping(path="/addJobPost")
-	public JobPost addJobPost(@RequestBody JobPost job)
+	public String addJobPost(@RequestBody JobPost job)
 	{
-		service.addJobPost(job);
-		return service.getJobById(job.getPostId());
+		JobPost savedJob = service.addJobPost(job);
+		webSocketNotificationService.notifySubscribers(savedJob);
+		return "Job posted successfully!";
 	}
 
 	@PutMapping("/updateJobPost")
