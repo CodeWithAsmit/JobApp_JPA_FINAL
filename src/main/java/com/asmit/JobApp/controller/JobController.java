@@ -1,6 +1,5 @@
 package com.asmit.JobApp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.asmit.JobApp.model.JobApplication;
 import com.asmit.JobApp.model.JobPost;
-import com.asmit.JobApp.model.Referral;
 import com.asmit.JobApp.repo.JobPostRepository;
 import com.asmit.JobApp.service.JobPostDTO;
 import com.asmit.JobApp.service.JobService;
-import com.asmit.JobApp.service.ReferralService;
 import com.asmit.JobApp.service.EmailNotificationService;
 
 @RestController

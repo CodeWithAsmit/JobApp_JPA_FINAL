@@ -1,7 +1,6 @@
 package com.asmit.JobApp.service;
 
 import org.apache.tika.Tika;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.asmit.JobApp.exception.InvalidFileException;

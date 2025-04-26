@@ -1,15 +1,12 @@
 package com.asmit.JobApp.service;
 
 import com.asmit.JobApp.model.Referral;
-import com.asmit.JobApp.model.UserProfile;
 import com.asmit.JobApp.repo.JobPostRepository;
 import com.asmit.JobApp.repo.ReferralRepository;
 import com.asmit.JobApp.repo.UserProfileRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReferralService
