@@ -28,6 +28,9 @@ public class SecurityConfig
 	@Autowired
 	private JwtFilter jwtFilter;
 
+	@Autowired
+	private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+
 	@Bean
 	public AuthenticationProvider authProvider()
     {
@@ -42,9 +45,10 @@ public class SecurityConfig
 	{
 		http.csrf(customizer -> customizer.disable())
 			.authorizeHttpRequests(request -> request
-				.requestMatchers("register", "login", "logout").permitAll()
+				.requestMatchers("register", "login", "logout", "/oauth2/**").permitAll()
 				.anyRequest().authenticated())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+			.oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler))
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			.logout(AbstractHttpConfigurer::disable);
 

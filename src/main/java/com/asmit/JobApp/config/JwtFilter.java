@@ -57,6 +57,11 @@ public class JwtFilter extends OncePerRequestFilter
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+            else
+            {
+                System.out.println("User not verified or token expired");
+                response.sendRedirect("/login");
+            }
         }
         filterChain.doFilter(request, response);
     }

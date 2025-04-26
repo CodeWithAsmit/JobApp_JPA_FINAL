@@ -29,4 +29,14 @@ public class UserService
 	{
         return userProfileRepository.save(userProfile);
     }
+
+	public User loadOrCreateOAuthUser(String email)
+	{
+		return repo.findByUsername(email).orElseGet(() -> {
+			User newUser = new User();
+			newUser.setUsername(email);
+			newUser.setPassword("OAUTH_USER");
+			return repo.save(newUser);
+		});
+	}
 }
