@@ -3,13 +3,11 @@ package com.asmit.JobApp.config;
 import com.asmit.JobApp.model.User;
 import com.asmit.JobApp.service.JwtService;
 import com.asmit.JobApp.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
 import jakarta.servlet.http.*;
 import java.io.IOException;
 

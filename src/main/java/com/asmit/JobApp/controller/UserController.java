@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.asmit.JobApp.model.User;
 import com.asmit.JobApp.model.UserProfile;
 import com.asmit.JobApp.service.UserService;
 import com.asmit.JobApp.service.JwtService;
 import com.asmit.JobApp.service.MyUserDetailsService;
-
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController

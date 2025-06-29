@@ -2,7 +2,6 @@ package com.asmit.JobApp.controller;
 
 import com.asmit.JobApp.service.ResumeService;
 import com.asmit.JobApp.exception.InvalidFileException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

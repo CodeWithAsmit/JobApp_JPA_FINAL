@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -22,6 +21,8 @@ import jakarta.persistence.ElementCollection;
 @AllArgsConstructor
 @Component
 @Entity
+
+/*@Document(collection = "SpringBootDB") --> Replace entity annotation with this if using MongoDB*/
 
 public class JobPost
 {

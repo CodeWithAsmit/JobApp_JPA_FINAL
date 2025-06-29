@@ -5,12 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import com.asmit.JobApp.repo.UserProfileRepository;
 import com.asmit.JobApp.repo.UserRepo;
-
 import jakarta.persistence.EntityNotFoundException;
-
 import com.asmit.JobApp.model.User;
 import com.asmit.JobApp.model.UserPrincipal;
 import com.asmit.JobApp.model.UserProfile;

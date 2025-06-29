@@ -4,7 +4,6 @@ import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.asmit.JobApp.exception.InvalidFileException;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
