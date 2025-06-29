@@ -43,3 +43,6 @@ log/
 ### OS Specific ###
 .DS_Store
 Thumbs.db
+
+### Docker Files ###
+docker-compose.yml
