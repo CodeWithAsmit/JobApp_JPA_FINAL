@@ -24,7 +24,7 @@ public class ValidationAspect
         else
         {
             Object result = joinPoint.proceed();
-            logger.info("Validation passed for request");
+            logger.debug("Validation passed for request");
             return result;
         }
     }

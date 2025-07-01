@@ -17,7 +17,6 @@ public class ResumeParserService
 
     public ResumeParserService()
     {
-        System.out.println("ResumeParserService constructor called");
         this.tika = new Tika();
     }
 

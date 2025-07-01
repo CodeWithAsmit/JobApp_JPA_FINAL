@@ -1,8 +1,11 @@
 package com.asmit.JobApp.controller;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
 import com.asmit.JobApp.model.JobApplication;
 import com.asmit.JobApp.model.JobPost;
 import com.asmit.JobApp.repo.JobPostRepository;
@@ -24,6 +27,11 @@ public class JobController
 	@Autowired
     private EmailNotificationService EmailNotificationService;
 
+	@Value("${ENABLE_DEBUG_LOGS:false}")
+    private boolean enableDebugLogs;
+
+	private static final Logger logger = LoggerFactory.getLogger(JobController.class);
+
 	@GetMapping(path="/jobPosts")
 	public List<JobPost> getAllJobs()
 	{
@@ -33,6 +41,10 @@ public class JobController
 	@GetMapping("/jobPost/{id}")
 	public JobPost getJobById(@PathVariable int id)
 	{
+		if(enableDebugLogs)
+        {
+            logger.debug("job is received from user is {}", id);
+        }
 		return service.getJobById(id);
 	}
 
@@ -55,11 +67,18 @@ public class JobController
 	@DeleteMapping("/deleteJobPost/{id}")
 	public String deleteJobPostById(@PathVariable int id)
 	{
+		if(enableDebugLogs)
+		{
+			logger.debug("job post to be deleted is {}", id);
+		}
+
 		JobPost job = service.getJobById(id);
+
 		if (job == null)
 		{
 			return "Job Post not found!";
 		}
+
 		service.deleteJobPost(id);
 		return "Job Post deleted successfully!";
 	}
@@ -67,12 +86,20 @@ public class JobController
 	@GetMapping("/jobPost/keyword/{keyword}")
 	public List<JobPost> getJobByKeyword(@PathVariable String keyword)
 	{
+		if(enableDebugLogs)
+		{
+			logger.debug("keyword received from user is {}", keyword);
+		}
 		return service.getJobByKeyword(keyword);
 	}
 
 	@GetMapping("/recommend/{userId}")
     public List<JobPostDTO> getRecommendedJobs(@PathVariable int userId)
 	{
+		if(enableDebugLogs)
+		{
+			logger.debug("User ID for job recommendations is {}", userId);
+		}
         return service.recommendJobs(userId);
     }
 
@@ -93,6 +120,10 @@ public class JobController
 	@GetMapping("/applications/{jobId}")
 	public List<JobApplication> getApplicationsForJob(@PathVariable int jobId)
 	{
+		if(enableDebugLogs)
+		{
+			logger.debug("Fetching applications for job ID: {}", jobId);
+		}
 		return service.getApplicationsForJob(jobId);
 	}
 }
