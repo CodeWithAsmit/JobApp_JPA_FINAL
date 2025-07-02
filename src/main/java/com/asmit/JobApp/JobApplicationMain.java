@@ -11,14 +11,17 @@ public class JobApplicationMain
 {
     public static void main(String[] args)
     {
-        try
+        if (System.getenv("RUNNING_IN_DOCKER") == null)
         {
-            Dotenv dotenv = Dotenv.configure().filename(".env").ignoreIfMalformed().ignoreIfMissing().load();
-            dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
-        }
-        catch (Exception e)
-        {
-            System.err.println("Failed to load .env file: " + e.getMessage());
+            try
+            {
+                Dotenv dotenv = Dotenv.configure().directory(".").filename(".env").ignoreIfMalformed().ignoreIfMissing().load();
+                dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+            }
+            catch (Exception e)
+            {
+                System.err.println("Failed to load .env file: " + e.getMessage());
+            }
         }
         SpringApplication.run(JobApplicationMain.class, args);
     }
