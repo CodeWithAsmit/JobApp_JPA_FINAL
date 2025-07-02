@@ -1,95 +1,160 @@
-<configuration>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
 
-    <!-- Console Appender -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <springProperty scope="context" name="LOG_PATH" source="LOG_PATH" defaultValue="log"/>
+    <springProperty scope="context" name="LOG_PATTERN" source="LOG_PATTERN" defaultValue="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <springProperty scope="context" name="ARCHIVE_PATH" source="ARCHIVE_PATH" defaultValue="${LOG_PATH}/archived"/>
 
-    <!-- Application Logs -->
-    <appender name="APP_LOG_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>log/application.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+    <!-- ================== DEV PROFILE ================== -->
+    <springProfile name="dev">
 
-    <!-- Aspect Logs -->
-    <appender name="LOGGING_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>log/logging.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <!-- Console (clean) -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
 
-    <appender name="PERFORMANCE_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>log/performance.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <!-- Daily Debug File (only today’s log kept) -->
+        <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_PATH}/debug-dev.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>1</maxHistory>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
 
-    <appender name="VALIDATION_FILE" class="ch.qos.logback.core.FileAppender">
-        <file>log/validation.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+        <!-- Log your app DEBUG to file -->
+        <logger name="com.asmit.JobApp" level="${LOG_LEVEL_APP:-DEBUG}" additivity="false">
+            <appender-ref ref="DEBUG_FILE"/>
+        </logger>
 
-    <!-- Aspect Loggers -->
-    
-    <logger name="com.asmit.JobApp.AOP.ApplicationAspect" level="info" additivity="false">
-        <appender-ref ref="APP_LOG_FILE"/>
-    </logger>
+        <logger name="com.asmit.JobApp.AOP.PerformanceAspect" level="INFO" additivity="false">
+            <appender-ref ref="DEBUG_FILE" />
+        </logger>
 
-    <logger name="com.asmit.JobApp.AOP.LoggingAspect" level="info" additivity="false">
-        <appender-ref ref="LOGGING_FILE"/>
-    </logger>
+        <logger name="com.asmit.JobApp.AOP.ValidationAspect" level="INFO" additivity="false">
+            <appender-ref ref="DEBUG_FILE" />
+        </logger>
 
-    <logger name="com.asmit.JobApp.AOP.PerformanceAspect" level="info" additivity="false">
-        <appender-ref ref="PERFORMANCE_FILE"/>
-    </logger>
+        <logger name="com.asmit.JobApp.AOP.LoggingAspect" level="INFO" additivity="false">
+            <appender-ref ref="DEBUG_FILE"/>
+        </logger>
 
-    <logger name="com.asmit.JobApp.AOP.ValidationAspect" level="info" additivity="false">
-        <appender-ref ref="VALIDATION_FILE"/>
-    </logger>
+        <!-- Root logs (WARN+) to console -->
+        <root level="WARN">
+            <appender-ref ref="CONSOLE"/>
+        </root>
 
-    <!-- Suppress Unnecessary Warnings -->
-    <logger name="org.hibernate.orm.deprecation" level="ERROR"/>
-    <logger name="org.springframework.boot.devtools" level="ERROR"/>
-    <logger name="org.apache.jasper.servlet.TldScanner" level="ERROR"/>
+    </springProfile>
 
-    <!-- Optimize Logging -->
-    <logger name="org.springframework" level="WARN"/>
-    <logger name="org.springframework.web" level="INFO"/>
-    <logger name="org.springframework.security" level="WARN"/>
-    <logger name="org.hibernate.SQL" level="ERROR"/>
-    <logger name="org.hibernate.type.descriptor.sql" level="ERROR"/>
+    <!-- ================== PROD PROFILE ================== -->
+    <springProfile name="prod">
 
-    <!-- Application Logger -->
-    <logger name="com.asmit.JobApp" level="INFO" additivity="false">
-        <appender-ref ref="APP_LOG_FILE"/>
-    </logger>
+        <!-- Rolling Application Logs -->
+        <appender name="APP_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/application.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${ARCHIVE_PATH}/application.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
 
-    <!-- Root Logger -->
-    <root level="WARN">
-        <appender-ref ref="CONSOLE"/>
-        <appender-ref ref="APP_LOG_FILE"/>
-    </root>
+        <!-- Logging Aspect -->
+        <appender name="LOGGING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/logging.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${ARCHIVE_PATH}/logging.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Exception Logs -->
+        <appender name="EXCEPTION_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/exceptions.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${ARCHIVE_PATH}/exceptions.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+                <maxFileSize>10MB</maxFileSize>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+                <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Application Logic Logs -->
+        <logger name="com.asmit.JobApp.service" level="${LOG_LEVEL_SERVICE:-INFO}" additivity="false">
+            <appender-ref ref="APP_LOG_FILE"/>
+        </logger>
+
+        <logger name="com.asmit.JobApp.AOP.LoggingAspect" level="INFO" additivity="false">
+            <appender-ref ref="LOGGING_FILE"/>
+        </logger>
+
+        <logger name="com.asmit.JobApp.AOP.ExceptionAspect" level="ERROR" additivity="false">
+            <appender-ref ref="EXCEPTION_FILE"/>
+        </logger>
+
+        <logger name="com.asmit.JobApp" level="${LOG_LEVEL_APP:-INFO}" additivity="false">
+            <appender-ref ref="APP_LOG_FILE"/>
+        </logger>
+
+        <logger name="com.asmit.JobApp.AOP.PerformanceAspect" level="INFO" additivity="false">
+            <appender-ref ref="APP_LOG_FILE" /> 
+        </logger>
+
+        <logger name="com.asmit.JobApp.AOP.ValidationAspect" level="INFO" additivity="false">
+            <appender-ref ref="APP_LOG_FILE" />
+        </logger>
+
+        <!-- Framework & Suppressed Logs -->
+        <logger name="org.hibernate.orm.deprecation" level="ERROR"/>
+        <logger name="org.springframework.boot.devtools" level="ERROR"/>
+        <logger name="org.apache.jasper.servlet.TldScanner" level="ERROR"/>
+        <logger name="org.springframework.security" level="WARN"/>
+        <logger name="org.hibernate.SQL" level="${LOG_LEVEL_HIBERNATE:-ERROR}"/>
+        <logger name="org.hibernate.type.descriptor.sql" level="${LOG_LEVEL_HIBERNATE:-ERROR}"/>
+
+        <!-- Optional Console for startup -->
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <logger name="org.springframework.boot" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.web" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.apache.catalina" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <!-- Root fallback -->
+        <root level="WARN">
+            <appender-ref ref="APP_LOG_FILE"/>
+        </root>
+    </springProfile>
 
 </configuration>
-
-<!--
-    Log levels in order of priority (low to high):
-    TRACE
-    DEBUG
-    INFO
-    WARN
-    ERROR
-    FATAL (not used in Logback)
--->
