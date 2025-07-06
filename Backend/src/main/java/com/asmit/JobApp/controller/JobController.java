@@ -12,9 +12,10 @@ import com.asmit.JobApp.repo.JobPostRepository;
 import com.asmit.JobApp.service.JobPostDTO;
 import com.asmit.JobApp.service.JobService;
 import com.asmit.JobApp.service.EmailNotificationService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173" , allowCredentials = "true")
 
 public class JobController
 {
